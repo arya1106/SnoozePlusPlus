@@ -12,6 +12,5 @@ snooze_CFLAGS = -fobjc-arc
 export ARCHS = arm64 arm64e
 
 include $(THEOS_MAKE_PATH)/tweak.mk
-SUBPROJECTS += snoozeprefs
 SUBPROJECTS += snoozeclockapp
 include $(THEOS_MAKE_PATH)/aggregate.mk

@@ -62,29 +62,32 @@
 
 %property (nonatomic, strong) UIButton *globalSettingsButton;
 
--(void)viewDidLoad{
-	%orig;
-	self.globalSettingsButton = [[UIButton alloc] initWithFrame:CGRectMake(10,10,10,10)];
-	[[self globalSettingsButton] setTranslatesAutoresizingMaskIntoConstraints:NO];
-	[[self view] addSubview:[self globalSettingsButton]];
-	[[[self globalSettingsButton] layer] setCornerRadius:15];
-	[[self globalSettingsButton] setBackgroundColor:[UIColor secondarySystemBackgroundColor]];
-	[NSLayoutConstraint activateConstraints:@[
-		[[self globalSettingsButton].leadingAnchor constraintEqualToAnchor:self.view.leadingAnchor constant:80],
-		[[self globalSettingsButton].topAnchor constraintEqualToAnchor:self.view.topAnchor constant:135],
-		[[self globalSettingsButton].widthAnchor constraintEqualToConstant:100],
-		[[self globalSettingsButton].heightAnchor constraintEqualToConstant:30],
-	]];
-	[[self globalSettingsButton] setTitle:@"thing" forState:UIControlStateNormal];
-	[[self globalSettingsButton] setTitleColor:[[[UIApplication sharedApplication] keyWindow] tintColor] forState:UIControlStateNormal];
-	[[[self globalSettingsButton] titleLabel] setFont:[UIFont systemFontOfSize:15 weight:UIFontWeightBold]];
-	[[self globalSettingsButton] addTarget:self action:@selector(showSnoozePlusPlusEditView) forControlEvents:UIControlEventTouchUpInside];
-	[[self globalSettingsButton] addTarget:self action:@selector(highlightSnoozePlusPlusButton) forControlEvents:UIControlEventTouchDown];
-}
-
--(void)dataSourceDidReload:(id)arg1{
-	%orig;
-	[[self view] bringSubviewToFront:[self globalSettingsButton]];
+-(id)tableView:(id)arg1 viewForHeaderInSection:(NSInteger)arg2{
+	UITableViewHeaderFooterView *headerView = (UITableViewHeaderFooterView*) %orig;
+	if(arg1 == 0){
+		return nil;
+	}
+	NSLog(@"TESTING %ld", arg2);
+	if(arg2 == 1){
+		self.globalSettingsButton = [[UIButton alloc] initWithFrame:CGRectMake(10,10,10,10)];
+		[[self globalSettingsButton] setTranslatesAutoresizingMaskIntoConstraints:NO];
+		[[headerView contentView] addSubview:[self globalSettingsButton]];
+		[[[self globalSettingsButton] layer] setCornerRadius:15];
+		[[self globalSettingsButton] setBackgroundColor:[UIColor secondarySystemBackgroundColor]];
+		[NSLayoutConstraint activateConstraints:@[
+			[[self globalSettingsButton].leadingAnchor constraintEqualToAnchor:headerView.leadingAnchor constant:80],
+			[[self globalSettingsButton].centerYAnchor constraintEqualToAnchor:headerView.centerYAnchor],
+			[[self globalSettingsButton].widthAnchor constraintEqualToConstant:100],
+			[[self globalSettingsButton].heightAnchor constraintEqualToConstant:30],
+		]];
+		[[self globalSettingsButton] setTitle:@"thing" forState:UIControlStateNormal];
+		[[self globalSettingsButton] setTitleColor:[[[UIApplication sharedApplication] keyWindow] tintColor] forState:UIControlStateNormal];
+		[[[self globalSettingsButton] titleLabel] setFont:[UIFont systemFontOfSize:15 weight:UIFontWeightBold]];
+		[[self globalSettingsButton] addTarget:self action:@selector(showSnoozePlusPlusEditView) forControlEvents:UIControlEventTouchUpInside];
+		[[self globalSettingsButton] addTarget:self action:@selector(highlightSnoozePlusPlusButton) forControlEvents:UIControlEventTouchDown];
+		return headerView;
+	}
+	else return headerView;
 }
 
 %new
