@@ -35,22 +35,12 @@
 	[[[[self view] editSnoozeDurationButton] layer] setCornerCurve: kCACornerCurveContinuous];
 	[[[self view] editSnoozeDurationButton] addTarget:self action:@selector(clearDuration) forControlEvents:UIControlEventTouchUpInside];
 	[[[self view] editSnoozeDurationButton] addTarget:self action:@selector(highlightSnoozePlusPlusButton) forControlEvents:UIControlEventTouchDown];
+	[[[self view] editSnoozeDurationButton] setTitle:@"Clear Snooze" forState:UIControlStateNormal];
+	[[[self view] editSnoozeDurationButton] setTitleColor:[[[UIApplication sharedApplication] keyWindow] tintColor] forState:UIControlStateNormal];
+	[[[[self view] editSnoozeDurationButton] titleLabel] setFont:[UIFont preferredFontForTextStyle:UIFontTextStyleHeadline]];
 
-	UILabel *buttonText = [[UILabel alloc] initWithFrame:CGRectMake(10,10,10,10)];
-	[[[self view] editSnoozeDurationButton] addSubview:buttonText];
-	[buttonText setText:@"Clear Duration"];
-	[buttonText setTextAlignment:NSTextAlignmentCenter];
-	[buttonText setFont:[UIFont preferredFontForTextStyle:UIFontTextStyleHeadline]];
-	[buttonText setTextColor:[[[UIApplication sharedApplication] keyWindow] tintColor]];
-	[buttonText setTranslatesAutoresizingMaskIntoConstraints:NO];
-		[NSLayoutConstraint activateConstraints:@[
-		[buttonText.centerXAnchor constraintEqualToAnchor:[[self view] editSnoozeDurationButton].centerXAnchor],
-		[buttonText.centerYAnchor constraintEqualToAnchor:[[self view] editSnoozeDurationButton].centerYAnchor],
-		[buttonText.widthAnchor constraintEqualToAnchor: [[self view] editSnoozeDurationButton].widthAnchor]
-	]];
-	[buttonText sizeToFit];
 	[[self view] updateLabels];
-	[self setTitle:@"Snooze Duration"];
+	if([self alarmIdentifier]) [self setTitle:@"Snooze Duration"];
 	UIBarButtonItem *doneButton = [[UIBarButtonItem alloc] initWithTitle:@"Save" style:UIBarButtonItemStylePlain target:self action:@selector(doneEditing)];
 	UIBarButtonItem *cancelButton = [[UIBarButtonItem alloc] initWithTitle:@"Cancel" style:UIBarButtonItemStylePlain target:self action:@selector(cancelEditing)];
 	[[self navigationItem] setRightBarButtonItem:doneButton];
@@ -58,10 +48,19 @@
 	if ([[NSFileManager defaultManager] fileExistsAtPath:@"/var/mobile/Library/Preferences/com.arya06.snooze++prefs.plist"]){
 		NSURL *prefsPlistURL = [NSURL fileURLWithPath:@"/var/mobile/Library/Preferences/com.arya06.snooze++prefs.plist"];
 		NSDictionary *plistDict = [NSDictionary dictionaryWithContentsOfURL:prefsPlistURL error:nil];
-		id snoozeDuration = [plistDict valueForKey:[self alarmIdentifier]];
-		if(snoozeDuration){
+		if([self alarmIdentifier]){
+			id snoozeDuration = [plistDict valueForKey:[self alarmIdentifier]];
+			if(snoozeDuration){
+				[[self view] setDuration:[snoozeDuration floatValue]];
+			}
+		}
+		else{
+			id snoozeDuration = [plistDict valueForKey:@"defaultGlobalSnooze"];
 			[[self view] setDuration:[snoozeDuration floatValue]];
 		}
+	}
+	else{
+		if(![self alarmIdentifier]) [[self view] setDuration:540];
 	}
 }
 
@@ -79,12 +78,14 @@
 	if ([[NSFileManager defaultManager] fileExistsAtPath:@"/var/mobile/Library/Preferences/com.arya06.snooze++prefs.plist"]){
 		NSDictionary *plistDict = [NSDictionary dictionaryWithContentsOfURL:prefsPlistURL error:nil];
 		NSMutableDictionary *prefsDict = [NSMutableDictionary dictionaryWithDictionary:plistDict];
-		[prefsDict setObject:@([[self view] getDuration]) forKey:[self alarmIdentifier]];
+		if(![self alarmIdentifier]) [prefsDict setObject:@([[self view] getDuration]) forKey:@"defaultGlobalSnooze"];
+		else [prefsDict setObject:@([[self view] getDuration]) forKey:[self alarmIdentifier]];
 		[prefsDict writeToURL:prefsPlistURL error:nil];
 	}
 	else {
 		NSMutableDictionary *prefsDict = [[NSMutableDictionary alloc] init];
-		[prefsDict setObject:@([[self view] getDuration]) forKey:[self alarmIdentifier]];
+		if(![self alarmIdentifier]) [prefsDict setObject:@([[self view] getDuration]) forKey:@"defaultGlobalSnooze"];
+		else [prefsDict setObject:@([[self view] getDuration]) forKey:[self alarmIdentifier]];
 		[prefsDict writeToURL:prefsPlistURL error:nil];
 	}
 }
@@ -103,7 +104,8 @@
 	if ([[NSFileManager defaultManager] fileExistsAtPath:@"/var/mobile/Library/Preferences/com.arya06.snooze++prefs.plist"]){
 		NSDictionary *plistDict = [NSDictionary dictionaryWithContentsOfURL:prefsPlistURL error:nil];
 		NSMutableDictionary *prefsDict = [NSMutableDictionary dictionaryWithDictionary:plistDict];
-		[prefsDict removeObjectForKey:[self alarmIdentifier]];
+		if([self alarmIdentifier]) [prefsDict removeObjectForKey:[self alarmIdentifier]];
+		else [prefsDict removeObjectForKey:@"defaultGlobalSnooze"];
 		[prefsDict writeToURL:prefsPlistURL error:nil];
 	}
 	[self dismissViewControllerAnimated:YES completion:nil];
