@@ -1,0 +1,8 @@
+#!/bin/bash
+printf "\nkilling mobiletimerd 🔪"
+killall -9 mobiletimerd && printf "mobiletimerd died 🪦"
+
+printf "\n\nresurrecting mobiletimerd ✨"
+launchctl start com.apple.mobiletimerd
+
+exit 0
