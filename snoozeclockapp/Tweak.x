@@ -51,10 +51,10 @@
 %new
 -(void)showSnoozePlusPlusEditView{
 	[[self editSnoozeDurationButton] setAlpha:1];
-	SNZPPEditViewController *myVC = [[SNZPPEditViewController alloc] init];
-	UINavigationController *myNC = [[UINavigationController alloc] initWithRootViewController:myVC];
-	[myVC setAlarmIdentifier:[[self editedAlarm] identifier]];
-	[self presentViewController:myNC animated:YES completion:nil];
+	SNZPPEditViewController *editVC = [[SNZPPEditViewController alloc] init];
+	UINavigationController *navigationVC = [[UINavigationController alloc] initWithRootViewController:editVC];
+	[editVC setAlarmIdentifier:[[self editedAlarm] identifier]];
+	[self presentViewController:navigationVC animated:YES completion:nil];
 }
 %end
 
@@ -64,10 +64,6 @@
 
 -(id)tableView:(id)arg1 viewForHeaderInSection:(NSInteger)arg2{
 	UITableViewHeaderFooterView *headerView = (UITableViewHeaderFooterView*) %orig;
-	if(arg1 == 0){
-		return nil;
-	}
-	NSLog(@"TESTING %ld", arg2);
 	if(arg2 == 1){
 		self.globalSettingsButton = [[UIButton alloc] initWithFrame:CGRectMake(10,10,10,10)];
 		[[self globalSettingsButton] setTranslatesAutoresizingMaskIntoConstraints:NO];
@@ -98,8 +94,8 @@
 %new
 -(void)showSnoozePlusPlusEditView{
 	[[self globalSettingsButton] setAlpha:1];
-	SNZPPEditViewController *myVC = [[SNZPPEditViewController alloc] init];
-	UINavigationController *myNC = [[UINavigationController alloc] initWithRootViewController:myVC];
-	[self presentViewController:myNC animated:YES completion:nil];
+	SNZPPEditViewController *editVC = [[SNZPPEditViewController alloc] init];
+	UINavigationController *navigationVC = [[UINavigationController alloc] initWithRootViewController:editVC];
+	[self presentViewController:navigationVC animated:YES completion:nil];
 }
 %end

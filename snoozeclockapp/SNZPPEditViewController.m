@@ -21,27 +21,48 @@
 		[self.view.picker.heightAnchor constraintEqualToConstant:216],
 	]];
 
-	[self view].editSnoozeDurationButton = [[UIButton alloc] initWithFrame:CGRectMake(10,10,10,10)];
-	[[self view] addSubview:[[self view] editSnoozeDurationButton]];
-	[[[self view] editSnoozeDurationButton] setTranslatesAutoresizingMaskIntoConstraints:NO];
+	[self view].clearSnoozeDurationButton = [[UIButton alloc] initWithFrame:CGRectMake(10,10,10,10)];
+	[[self view] addSubview:[[self view] clearSnoozeDurationButton]];
+	[[[self view] clearSnoozeDurationButton] setTranslatesAutoresizingMaskIntoConstraints:NO];
 	[NSLayoutConstraint activateConstraints:@[
-		[self.view.editSnoozeDurationButton.centerXAnchor constraintEqualToAnchor:[self view].centerXAnchor],
-		[self.view.editSnoozeDurationButton.centerYAnchor constraintEqualToAnchor:[self view].centerYAnchor],
-		[self.view.editSnoozeDurationButton.widthAnchor constraintEqualToConstant:200],
-		[self.view.editSnoozeDurationButton.heightAnchor constraintEqualToConstant:50],
+		[self.view.clearSnoozeDurationButton.centerXAnchor constraintEqualToAnchor:[self view].centerXAnchor],
+		[self.view.clearSnoozeDurationButton.centerYAnchor constraintEqualToAnchor:[self view].centerYAnchor],
+		[self.view.clearSnoozeDurationButton.widthAnchor constraintEqualToConstant:200],
+		[self.view.clearSnoozeDurationButton.heightAnchor constraintEqualToConstant:50],
 	]]; 
-	[[[self view] editSnoozeDurationButton] setBackgroundColor:[UIColor tertiarySystemBackgroundColor]];
-	[[[[self view] editSnoozeDurationButton] layer] setCornerRadius: 13];
-	[[[[self view] editSnoozeDurationButton] layer] setCornerCurve: kCACornerCurveContinuous];
-	[[[self view] editSnoozeDurationButton] addTarget:self action:@selector(clearDuration) forControlEvents:UIControlEventTouchUpInside];
-	[[[self view] editSnoozeDurationButton] addTarget:self action:@selector(highlightSnoozePlusPlusButton) forControlEvents:UIControlEventTouchDown];
-	[[[self view] editSnoozeDurationButton] setTitle:@"Clear Snooze" forState:UIControlStateNormal];
-	[[[self view] editSnoozeDurationButton] setTitleColor:[[[UIApplication sharedApplication] keyWindow] tintColor] forState:UIControlStateNormal];
-	[[[[self view] editSnoozeDurationButton] titleLabel] setFont:[UIFont preferredFontForTextStyle:UIFontTextStyleHeadline]];
+	[[[self view] clearSnoozeDurationButton] setBackgroundColor:[UIColor tertiarySystemBackgroundColor]];
+	[[[[self view] clearSnoozeDurationButton] layer] setCornerRadius: 13];
+	[[[[self view] clearSnoozeDurationButton] layer] setCornerCurve: kCACornerCurveContinuous];
+	[[[self view] clearSnoozeDurationButton] addTarget:self action:@selector(clearDuration) forControlEvents:UIControlEventTouchUpInside];
+	[[[self view] clearSnoozeDurationButton] addTarget:self action:@selector(highlightSnoozePlusPlusButton) forControlEvents:UIControlEventTouchDown];
+	[[[self view] clearSnoozeDurationButton] setTitle:@"Clear Snooze" forState:UIControlStateNormal];
+	[[[self view] clearSnoozeDurationButton] setTitleColor:[[[UIApplication sharedApplication] keyWindow] tintColor] forState:UIControlStateNormal];
+	[[[[self view] clearSnoozeDurationButton] titleLabel] setFont:[UIFont preferredFontForTextStyle:UIFontTextStyleHeadline]];
+
+	if(![self alarmIdentifier]){
+		[self view].bedtimeAlarmsButton = [[UIButton alloc] initWithFrame:CGRectMake(10,10,10,10)];
+		[[self view] addSubview:[[self view] bedtimeAlarmsButton]];
+		[[[self view] bedtimeAlarmsButton] setTranslatesAutoresizingMaskIntoConstraints:NO];
+		[NSLayoutConstraint activateConstraints:@[
+			[self.view.bedtimeAlarmsButton.centerXAnchor constraintEqualToAnchor:[self view].centerXAnchor],
+			[self.view.bedtimeAlarmsButton.centerYAnchor constraintEqualToAnchor:[self view].centerYAnchor constant:75],
+			[self.view.bedtimeAlarmsButton.widthAnchor constraintEqualToConstant:200],
+			[self.view.bedtimeAlarmsButton.heightAnchor constraintEqualToConstant:50],
+		]];
+		[[[self view] bedtimeAlarmsButton] setBackgroundColor:[UIColor tertiarySystemBackgroundColor]];
+		[[[[self view] bedtimeAlarmsButton] layer] setCornerRadius: 13];
+		[[[[self view] bedtimeAlarmsButton] layer] setCornerCurve: kCACornerCurveContinuous];
+		[[[self view] bedtimeAlarmsButton] addTarget:self action:@selector(presentBedtimeAlarmViewController) forControlEvents:UIControlEventTouchUpInside];
+		[[[self view] bedtimeAlarmsButton] addTarget:self action:@selector(highlightSnoozePlusPlusBedtimeButton) forControlEvents:UIControlEventTouchDown];
+		[[[self view] bedtimeAlarmsButton] setTitle:@"Bedtime Alarms" forState:UIControlStateNormal];
+		[[[self view] bedtimeAlarmsButton] setTitleColor:[[[UIApplication sharedApplication] keyWindow] tintColor] forState:UIControlStateNormal];
+		[[[[self view] bedtimeAlarmsButton] titleLabel] setFont:[UIFont preferredFontForTextStyle:UIFontTextStyleHeadline]];
+	}	
 
 	[[self view] updateLabels];
 	if([self alarmIdentifier]) [self setTitle:@"Snooze Duration"];
-	UIBarButtonItem *doneButton = [[UIBarButtonItem alloc] initWithTitle:@"Save" style:UIBarButtonItemStylePlain target:self action:@selector(doneEditing)];
+	else [self setTitle:@"Default Snooze Duration"];
+	UIBarButtonItem *doneButton = [[UIBarButtonItem alloc] initWithTitle:@"Save" style:UIBarButtonItemStyleDone target:self action:@selector(doneEditing)];
 	UIBarButtonItem *cancelButton = [[UIBarButtonItem alloc] initWithTitle:@"Cancel" style:UIBarButtonItemStylePlain target:self action:@selector(cancelEditing)];
 	[[self navigationItem] setRightBarButtonItem:doneButton];
 	[[self navigationItem] setLeftBarButtonItem:cancelButton];
@@ -95,11 +116,15 @@
 }
 
 -(void)highlightSnoozePlusPlusButton{
-	[[[self view] editSnoozeDurationButton] setAlpha:0.5];
+	[[[self view] clearSnoozeDurationButton] setAlpha:0.5];
+}
+
+-(void)highlightSnoozePlusPlusBedtimeButton{
+	[[[self view] bedtimeAlarmsButton] setAlpha:0.5];
 }
 
 -(void)clearDuration{
-	[[[self view] editSnoozeDurationButton] setAlpha:0.5];
+	[[[self view] clearSnoozeDurationButton] setAlpha:0.5];
 	NSURL *prefsPlistURL = [NSURL fileURLWithPath:@"/var/mobile/Library/Preferences/com.arya06.snooze++prefs.plist"];
 	if ([[NSFileManager defaultManager] fileExistsAtPath:@"/var/mobile/Library/Preferences/com.arya06.snooze++prefs.plist"]){
 		NSDictionary *plistDict = [NSDictionary dictionaryWithContentsOfURL:prefsPlistURL error:nil];
@@ -109,5 +134,13 @@
 		[prefsDict writeToURL:prefsPlistURL error:nil];
 	}
 	[self dismissViewControllerAnimated:YES completion:nil];
+}
+
+-(void)presentBedtimeAlarmViewController{
+	[[[self view] bedtimeAlarmsButton] setAlpha:1];
+	SNZPPBedtimeAlarmsTableViewController *bedtimeTableVC = [[SNZPPBedtimeAlarmsTableViewController alloc] init];
+	UINavigationController *navigationVC = [[UINavigationController alloc] initWithRootViewController:bedtimeTableVC];
+	[self presentViewController:navigationVC animated:YES completion:nil];
+
 }
 @end

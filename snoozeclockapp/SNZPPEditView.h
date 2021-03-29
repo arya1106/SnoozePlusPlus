@@ -13,7 +13,8 @@
 @interface SNZPPEditView : UIView
 @property (nonatomic, strong, readwrite) MTATimerIntervalPickerView *picker;
 @property (nonatomic, strong, readwrite) MTACircleButton *deleteButton;
-@property (nonatomic, strong, readwrite) UIButton *editSnoozeDurationButton;
+@property (nonatomic, strong, readwrite) UIButton *clearSnoozeDurationButton;
+@property (nonatomic, strong, readwrite) UIButton *bedtimeAlarmsButton;
 -(void)updateLabels;
 -(CGFloat)getDuration;
 -(void)setDuration:(CGFloat)duration;
