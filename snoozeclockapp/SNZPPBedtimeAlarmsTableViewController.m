@@ -1,43 +1,5 @@
 #import "SNZPPBedtimeAlarmsTableViewController.h"
-#import "SNZPPEditViewController.h"
-#import "MTAlarm.h"
 
-@interface MTAlarmCache
-@property (nonatomic, strong, readwrite) NSMutableArray *sleepAlarms;
-@end
-
-@interface MTAlarmManager
-@property (nonatomic, strong, readwrite) MTAlarmCache* cache;
-@end
-
-@interface MTUIDigitalClockLabel : UIView
-@property (nonatomic, strong, readwrite) UIFont* font;
-@property (nonatomic, strong, readwrite) UIFont* timeDesignatorFont;
--(void)forceSetHour:(NSInteger)arg1 minute:(NSInteger)arg2;
-@end
-
-@interface MyCell : UITableViewCell
-@property (nonatomic, strong, readwrite) MTUIDigitalClockLabel *label;
-@end
-
-@implementation MyCell
--(instancetype)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString*)reuseIdentifier{
-	self = [super initWithStyle:style reuseIdentifier:reuseIdentifier];
-	self.label = [[NSClassFromString(@"MTUIDigitalClockLabel") alloc] initWithFrame:CGRectMake(10,10,10,10)];
-	[[self contentView] addSubview:[self label]];
-	[[self label] setTranslatesAutoresizingMaskIntoConstraints:NO];
-	[NSLayoutConstraint activateConstraints:@[
-		[self.label.centerYAnchor constraintEqualToAnchor:self.contentView.centerYAnchor],
-		[self.label.leadingAnchor constraintEqualToAnchor:self.contentView.leadingAnchor constant:16],
-		[self.label.heightAnchor constraintEqualToConstant:72],
-	]];
-	[[self label] setFont:[UIFont systemFontOfSize:60 weight:UIFontWeightThin]];
-	[[self label] setTimeDesignatorFont:[UIFont systemFontOfSize:37 weight:UIFontWeightLight]];
-	return self;
-}
-@end
-
-#import "SNZPPBedtimeAlarmsTableViewController.h"
 
 @implementation SNZPPBedtimeAlarmsTableViewController
 
@@ -47,8 +9,10 @@
 	[self setSleepAlarms: [[manager cache] sleepAlarms]];
 	[[self navigationItem] setTitle:@"Bedtime Alarms"];
 	UIBarButtonItem *cancelButton = [[UIBarButtonItem alloc] initWithTitle:@"Cancel" style:UIBarButtonItemStylePlain target:self action:@selector(cancelEditing)];
+	UIBarButtonItem *doneButton = [[UIBarButtonItem alloc] initWithTitle:@"Done" style:UIBarButtonItemStyleDone target:self action:@selector(cancelEditing)];
 	[[self navigationItem] setLeftBarButtonItem:cancelButton];
-	[[self tableView] registerClass:NSClassFromString(@"MyCell") forCellReuseIdentifier:@"myCell"];
+	[[self navigationItem] setRightBarButtonItem:doneButton];
+	[[self tableView] registerClass:[SNZPPAlarmTableViewCell class] forCellReuseIdentifier:@"alarmCell"];
 	[[self tableView] setDataSource:self];
 	[[self tableView] setDelegate:self];
 	[[self tableView] setRowHeight:100];
@@ -59,7 +23,7 @@
 }
 
 -(UITableViewCell*)tableView:(UITableView*)tableView cellForRowAtIndexPath:(NSIndexPath*)indexPath{
-	MyCell *cell = [[self tableView] dequeueReusableCellWithIdentifier:@"myCell" forIndexPath:indexPath];
+	SNZPPAlarmTableViewCell *cell = [[self tableView] dequeueReusableCellWithIdentifier:@"alarmCell" forIndexPath:indexPath];
 	MTAlarm *alarm = [[self sleepAlarms] objectAtIndex:[indexPath row]];
 	[[cell label] forceSetHour:[alarm hour] minute:[alarm minute]];
 	return cell;

@@ -6,13 +6,8 @@
 -(void)setDuration:(CGFloat)duration;
 @end
 
-@interface MTACircleButton : UIButton
-@property (nonatomic, assign, readwrite) NSUInteger buttonCircleSize;
-@end
-
 @interface SNZPPEditView : UIView
 @property (nonatomic, strong, readwrite) MTATimerIntervalPickerView *picker;
-@property (nonatomic, strong, readwrite) MTACircleButton *deleteButton;
 @property (nonatomic, strong, readwrite) UIButton *clearSnoozeDurationButton;
 @property (nonatomic, strong, readwrite) UIButton *bedtimeAlarmsButton;
 -(void)updateLabels;

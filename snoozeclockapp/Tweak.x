@@ -1,10 +1,6 @@
 #import <UIKit/UIKit.h>
 #import "SNZPPEditViewController.h"
 
-@interface MTAlarm
--(NSString*)identifier;
-@end
-
 @interface MTAAlarmEditViewController : UIViewController
 @property (nonatomic, strong, readwrite) MTAlarm *editedAlarm;
 @property (nonatomic, strong, readwrite) UIButton *editSnoozeDurationButton;

@@ -10,7 +10,6 @@
 -(void)viewDidLoad{
 	[super viewDidLoad];
 	[[self view] setBackgroundColor: [UIColor systemBackgroundColor]];
-	[self view].deleteButton = [[NSClassFromString(@"MTACircleButton") alloc] initWithFrame:CGRectMake(0,0,0,0)];
 	[self view].picker = [[NSClassFromString(@"MTATimerIntervalPickerView") alloc] initWithFrame:CGRectMake(0,0,0,0)];
 	[[self view] addSubview: [[self view] picker]];
 	[[[self view] picker] setTranslatesAutoresizingMaskIntoConstraints:NO];
@@ -52,9 +51,15 @@
 		[[[self view] bedtimeAlarmsButton] setBackgroundColor:[UIColor tertiarySystemBackgroundColor]];
 		[[[[self view] bedtimeAlarmsButton] layer] setCornerRadius: 13];
 		[[[[self view] bedtimeAlarmsButton] layer] setCornerCurve: kCACornerCurveContinuous];
-		[[[self view] bedtimeAlarmsButton] addTarget:self action:@selector(presentBedtimeAlarmViewController) forControlEvents:UIControlEventTouchUpInside];
 		[[[self view] bedtimeAlarmsButton] addTarget:self action:@selector(highlightSnoozePlusPlusBedtimeButton) forControlEvents:UIControlEventTouchDown];
-		[[[self view] bedtimeAlarmsButton] setTitle:@"Bedtime Alarms" forState:UIControlStateNormal];
+		if ([[NSProcessInfo processInfo] isOperatingSystemAtLeastVersion:(NSOperatingSystemVersion){.majorVersion = 14, .minorVersion = 0, .patchVersion = 0}] && [[[[[UIApplication sharedApplication] valueForKey:@"_alarmManager"] cache] sleepAlarms] count] > 1 ) {
+			[[[self view] bedtimeAlarmsButton] setTitle:@"Bedtime Alarms" forState:UIControlStateNormal];
+			[[[self view] bedtimeAlarmsButton] addTarget:self action:@selector(presentBedtimeAlarmViewController) forControlEvents:UIControlEventTouchUpInside];
+		}
+		else {
+			[[[self view] bedtimeAlarmsButton] setTitle:@"Bedtime Alarm" forState:UIControlStateNormal];
+			[[[self view] bedtimeAlarmsButton] addTarget:self action:@selector(presentEditViewController) forControlEvents:UIControlEventTouchUpInside];
+		};
 		[[[self view] bedtimeAlarmsButton] setTitleColor:[[[UIApplication sharedApplication] keyWindow] tintColor] forState:UIControlStateNormal];
 		[[[[self view] bedtimeAlarmsButton] titleLabel] setFont:[UIFont preferredFontForTextStyle:UIFontTextStyleHeadline]];
 	}	
@@ -142,5 +147,17 @@
 	UINavigationController *navigationVC = [[UINavigationController alloc] initWithRootViewController:bedtimeTableVC];
 	[self presentViewController:navigationVC animated:YES completion:nil];
 
+}
+
+-(void)presentEditViewController{
+	SNZPPEditViewController *editVC = [[SNZPPEditViewController alloc] init];
+	UINavigationController *navigationVC = [[UINavigationController alloc] initWithRootViewController:editVC];
+	if([[NSProcessInfo processInfo] isOperatingSystemAtLeastVersion:(NSOperatingSystemVersion){.majorVersion = 14, .minorVersion = 0, .patchVersion = 0}]){
+		[editVC setAlarmIdentifier:[[[[[[UIApplication sharedApplication] valueForKey:@"_alarmManager"] cache] sleepAlarms] objectAtIndex:0] identifier]];
+	}
+	else{
+		[editVC setAlarmIdentifier:[[[[[UIApplication sharedApplication] valueForKey:@"_alarmManager"] cache] sleepAlarm] identifier]];
+	}
+	[self presentViewController:navigationVC animated:YES completion:nil];
 }
 @end
