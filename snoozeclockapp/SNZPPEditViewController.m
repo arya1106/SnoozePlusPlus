@@ -20,7 +20,7 @@
 		[self.view.picker.heightAnchor constraintEqualToConstant:216],
 	]];
 
-	[self view].clearSnoozeDurationButton = [[UIButton alloc] initWithFrame:CGRectMake(10,10,10,10)];
+	[self view].clearSnoozeDurationButton = [UIButton buttonWithType:UIButtonTypeSystem];
 	[[self view] addSubview:[[self view] clearSnoozeDurationButton]];
 	[[[self view] clearSnoozeDurationButton] setTranslatesAutoresizingMaskIntoConstraints:NO];
 	[NSLayoutConstraint activateConstraints:@[
@@ -33,13 +33,12 @@
 	[[[[self view] clearSnoozeDurationButton] layer] setCornerRadius: 13];
 	[[[[self view] clearSnoozeDurationButton] layer] setCornerCurve: kCACornerCurveContinuous];
 	[[[self view] clearSnoozeDurationButton] addTarget:self action:@selector(clearDuration) forControlEvents:UIControlEventTouchUpInside];
-	[[[self view] clearSnoozeDurationButton] addTarget:self action:@selector(highlightSnoozePlusPlusButton) forControlEvents:UIControlEventTouchDown];
 	[[[self view] clearSnoozeDurationButton] setTitle:@"Clear Snooze" forState:UIControlStateNormal];
 	[[[self view] clearSnoozeDurationButton] setTitleColor:[[[UIApplication sharedApplication] keyWindow] tintColor] forState:UIControlStateNormal];
 	[[[[self view] clearSnoozeDurationButton] titleLabel] setFont:[UIFont preferredFontForTextStyle:UIFontTextStyleHeadline]];
 
 	if(![self alarmIdentifier]){
-		[self view].bedtimeAlarmsButton = [[UIButton alloc] initWithFrame:CGRectMake(10,10,10,10)];
+		[self view].bedtimeAlarmsButton = [UIButton buttonWithType:UIButtonTypeSystem];
 		[[self view] addSubview:[[self view] bedtimeAlarmsButton]];
 		[[[self view] bedtimeAlarmsButton] setTranslatesAutoresizingMaskIntoConstraints:NO];
 		[NSLayoutConstraint activateConstraints:@[
@@ -51,7 +50,6 @@
 		[[[self view] bedtimeAlarmsButton] setBackgroundColor:[UIColor tertiarySystemBackgroundColor]];
 		[[[[self view] bedtimeAlarmsButton] layer] setCornerRadius: 13];
 		[[[[self view] bedtimeAlarmsButton] layer] setCornerCurve: kCACornerCurveContinuous];
-		[[[self view] bedtimeAlarmsButton] addTarget:self action:@selector(highlightSnoozePlusPlusBedtimeButton) forControlEvents:UIControlEventTouchDown];
 		if ([[NSProcessInfo processInfo] isOperatingSystemAtLeastVersion:(NSOperatingSystemVersion){.majorVersion = 14, .minorVersion = 0, .patchVersion = 0}] && [[[[[UIApplication sharedApplication] valueForKey:@"_alarmManager"] cache] sleepAlarms] count] > 1 ) {
 			[[[self view] bedtimeAlarmsButton] setTitle:@"Bedtime Alarms" forState:UIControlStateNormal];
 			[[[self view] bedtimeAlarmsButton] addTarget:self action:@selector(presentBedtimeAlarmViewController) forControlEvents:UIControlEventTouchUpInside];
@@ -118,14 +116,6 @@
 
 -(void)cancelEditing{
 	[self dismissViewControllerAnimated:YES completion:nil];
-}
-
--(void)highlightSnoozePlusPlusButton{
-	[[[self view] clearSnoozeDurationButton] setAlpha:0.5];
-}
-
--(void)highlightSnoozePlusPlusBedtimeButton{
-	[[[self view] bedtimeAlarmsButton] setAlpha:0.5];
 }
 
 -(void)clearDuration{
