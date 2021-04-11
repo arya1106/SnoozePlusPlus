@@ -18,7 +18,7 @@
 -(BOOL)mtIsIn24HourTime;
 @end
 
-BOOL isiOS14;
+BOOL isiOS14, hasAlarmGroups;
 
 %hook MTAAlarmEditViewController
 
@@ -92,25 +92,48 @@ BOOL isiOS14;
 -(id)tableView:(id)arg1 viewForHeaderInSection:(NSInteger)arg2{
 	UITableViewHeaderFooterView *headerView = (UITableViewHeaderFooterView*) %orig;
 	if(!isiOS14) return headerView;
-	if(arg2 == 1){
-		self.globalSettingsButton = [UIButton buttonWithType:UIButtonTypeSystem];
-		[[self globalSettingsButton] setTranslatesAutoresizingMaskIntoConstraints:NO];
-		[[headerView contentView] addSubview:[self globalSettingsButton]];
-		[[[self globalSettingsButton] layer] setCornerRadius:15];
-		[[self globalSettingsButton] setBackgroundColor:[UIColor secondarySystemBackgroundColor]];
-		[NSLayoutConstraint activateConstraints:@[
-			[[self globalSettingsButton].leadingAnchor constraintEqualToAnchor:headerView.leadingAnchor constant:80],
-			[[self globalSettingsButton].centerYAnchor constraintEqualToAnchor:headerView.centerYAnchor],
-			[[self globalSettingsButton].widthAnchor constraintEqualToConstant:100],
-			[[self globalSettingsButton].heightAnchor constraintEqualToConstant:30],
-		]];
-		[[self globalSettingsButton] setTitle:@"Set Snooze" forState:UIControlStateNormal];
-		[[self globalSettingsButton] setTitleColor:[[[UIApplication sharedApplication] keyWindow] tintColor] forState:UIControlStateNormal];
-		[[[self globalSettingsButton] titleLabel] setFont:[UIFont systemFontOfSize:15 weight:UIFontWeightBold]];
-		[[self globalSettingsButton] addTarget:self action:@selector(showSnoozePlusPlusEditView) forControlEvents:UIControlEventTouchUpInside];
-		return headerView;
+	if(hasAlarmGroups){	
+		if(arg2 == 2){
+			self.globalSettingsButton = [UIButton buttonWithType:UIButtonTypeSystem];
+			[[self globalSettingsButton] setTranslatesAutoresizingMaskIntoConstraints:NO];
+			[[headerView contentView] addSubview:[self globalSettingsButton]];
+			[[[self globalSettingsButton] layer] setCornerRadius:15];
+			[[self globalSettingsButton] setBackgroundColor:[UIColor secondarySystemBackgroundColor]];
+			[NSLayoutConstraint activateConstraints:@[
+				[[self globalSettingsButton].leadingAnchor constraintEqualToAnchor:headerView.leadingAnchor constant:80],
+				[[self globalSettingsButton].centerYAnchor constraintEqualToAnchor:headerView.centerYAnchor],
+				[[self globalSettingsButton].widthAnchor constraintEqualToConstant:100],
+				[[self globalSettingsButton].heightAnchor constraintEqualToConstant:30],
+			]];
+			[[self globalSettingsButton] setTitle:@"Set Snooze" forState:UIControlStateNormal];
+			[[self globalSettingsButton] setTitleColor:[[[UIApplication sharedApplication] keyWindow] tintColor] forState:UIControlStateNormal];
+			[[[self globalSettingsButton] titleLabel] setFont:[UIFont systemFontOfSize:15 weight:UIFontWeightBold]];
+			[[self globalSettingsButton] addTarget:self action:@selector(showSnoozePlusPlusEditView) forControlEvents:UIControlEventTouchUpInside];
+			return headerView;
+		}
+		else return headerView;
 	}
-	else return headerView;
+	else {
+		if(arg2 == 1){
+			self.globalSettingsButton = [UIButton buttonWithType:UIButtonTypeSystem];
+			[[self globalSettingsButton] setTranslatesAutoresizingMaskIntoConstraints:NO];
+			[[headerView contentView] addSubview:[self globalSettingsButton]];
+			[[[self globalSettingsButton] layer] setCornerRadius:15];
+			[[self globalSettingsButton] setBackgroundColor:[UIColor secondarySystemBackgroundColor]];
+			[NSLayoutConstraint activateConstraints:@[
+				[[self globalSettingsButton].leadingAnchor constraintEqualToAnchor:headerView.leadingAnchor constant:80],
+				[[self globalSettingsButton].centerYAnchor constraintEqualToAnchor:headerView.centerYAnchor],
+				[[self globalSettingsButton].widthAnchor constraintEqualToConstant:100],
+				[[self globalSettingsButton].heightAnchor constraintEqualToConstant:30],
+			]];
+			[[self globalSettingsButton] setTitle:@"Set Snooze" forState:UIControlStateNormal];
+			[[self globalSettingsButton] setTitleColor:[[[UIApplication sharedApplication] keyWindow] tintColor] forState:UIControlStateNormal];
+			[[[self globalSettingsButton] titleLabel] setFont:[UIFont systemFontOfSize:15 weight:UIFontWeightBold]];
+			[[self globalSettingsButton] addTarget:self action:@selector(showSnoozePlusPlusEditView) forControlEvents:UIControlEventTouchUpInside];
+			return headerView;
+		}
+		else return headerView;
+	}
 }
 
 %new
@@ -124,4 +147,5 @@ BOOL isiOS14;
 
 %ctor {
 	isiOS14 = [[NSProcessInfo processInfo] isOperatingSystemAtLeastVersion:(NSOperatingSystemVersion){.majorVersion = 14, .minorVersion = 0, .patchVersion = 0}];
+	hasAlarmGroups = [[NSFileManager defaultManager] fileExistsAtPath:@"/Library/MobileSubstrate/DynamicLibraries/AlarmGroups.dylib"];
 }

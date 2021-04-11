@@ -6,7 +6,16 @@
 -(void)viewDidLoad{
 	[super viewDidLoad];
 	MTAlarmManager *manager = [[UIApplication sharedApplication] valueForKey:@"_alarmManager"];
-	[self setSleepAlarms: [[manager cache] sleepAlarms]];
+	// NSArray *immutableAlarms = [[manager cache] sleepAlarms];
+	// NSMutableArray *alarms = [[[manager cache] sleepAlarms] mutableCopy];
+	// for (int i = 0; i<alarms.count; i++) {
+	// 	if ( [[immutableAlarms objectAtIndex:i] day] != NSUIntegerMax ){
+	// 		[alarms removeObjectAtIndex:i];
+	// 		NSLog(@"TESTING %@", [immutableAlarms objectAtIndex:i]);
+	// 	}
+	// }
+	// [self setSleepAlarms: alarms];
+	[self setSleepAlarms:[[manager cache] sleepAlarms]];
 	[[self navigationItem] setTitle:@"Bedtime Alarms"];
 	UIBarButtonItem *cancelButton = [[UIBarButtonItem alloc] initWithTitle:@"Cancel" style:UIBarButtonItemStylePlain target:self action:@selector(cancelEditing)];
 	UIBarButtonItem *doneButton = [[UIBarButtonItem alloc] initWithTitle:@"Done" style:UIBarButtonItemStyleDone target:self action:@selector(cancelEditing)];
