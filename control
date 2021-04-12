@@ -2,8 +2,11 @@ Package: com.arya06.snooze++
 Name: snooze++
 Version: 1.0.0
 Architecture: iphoneos-arm
-Description: Custom snooze times for your alarms!
+Description: Custom snooze times for your alarms, right in the clock app.
 Maintainer: arya06
 Author: arya06
 Section: Tweaks
 Depends: mobilesubstrate (>= 0.9.5000), preferenceloader
+Depiction: https://arya1106.github.io/repo/depictions/web/?p=com.arya06.snoozepp
+SileoDepiction: https://arya1106.github.io/repo/depictions/native/com.arya06.snoozepp/depiction.json
+Icon: https://raw.githubusercontent.com/arya1106/repo/main/assets/snoozepp/icon.png
