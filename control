@@ -1,8 +1,8 @@
 Package: com.arya06.snooze++
 Name: snooze++
-Version: 0.0.3
+Version: 1.0.0
 Architecture: iphoneos-arm
-Description: An awesome MobileSubstrate tweak!
+Description: Custom snooze times for your alarms!
 Maintainer: arya06
 Author: arya06
 Section: Tweaks

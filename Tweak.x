@@ -1,10 +1,5 @@
 #import <Foundation/Foundation.h>
-
-@interface MTAlarm
--(void)setSnoozeFireDate:(id)fireDate;
--(id)identifier;
--(BOOL)isSnoozed;
-@end
+#import "snoozeclockapp/MTAlarm.h"
 
 %hook MTAlarm
 -(void)setSnoozeFireDate:(id)fireDate{

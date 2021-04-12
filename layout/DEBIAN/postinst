@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 printf "\nkilling mobiletimerd 🔪"
 killall -9 mobiletimerd && printf "mobiletimerd died 🪦"
 
