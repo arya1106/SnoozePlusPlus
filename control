@@ -1,6 +1,6 @@
 Package: com.arya06.snooze++
 Name: snooze++
-Version: 1.0.0
+Version: 1.0.1
 Architecture: iphoneos-arm
 Description: Custom snooze times for your alarms, right in the clock app.
 Maintainer: arya06

@@ -100,7 +100,7 @@ BOOL isiOS14, hasAlarmGroups;
 			[[[self globalSettingsButton] layer] setCornerRadius:15];
 			[[self globalSettingsButton] setBackgroundColor:[UIColor secondarySystemBackgroundColor]];
 			[NSLayoutConstraint activateConstraints:@[
-				[[self globalSettingsButton].leadingAnchor constraintEqualToAnchor:headerView.leadingAnchor constant:80],
+				[[self globalSettingsButton].trailingAnchor constraintEqualToAnchor:headerView.trailingAnchor constant:-8],
 				[[self globalSettingsButton].centerYAnchor constraintEqualToAnchor:headerView.centerYAnchor],
 				[[self globalSettingsButton].widthAnchor constraintEqualToConstant:100],
 				[[self globalSettingsButton].heightAnchor constraintEqualToConstant:30],
@@ -121,7 +121,7 @@ BOOL isiOS14, hasAlarmGroups;
 			[[[self globalSettingsButton] layer] setCornerRadius:15];
 			[[self globalSettingsButton] setBackgroundColor:[UIColor secondarySystemBackgroundColor]];
 			[NSLayoutConstraint activateConstraints:@[
-				[[self globalSettingsButton].leadingAnchor constraintEqualToAnchor:headerView.leadingAnchor constant:80],
+				[[self globalSettingsButton].trailingAnchor constraintEqualToAnchor:headerView.trailingAnchor constant:-8],
 				[[self globalSettingsButton].centerYAnchor constraintEqualToAnchor:headerView.centerYAnchor],
 				[[self globalSettingsButton].widthAnchor constraintEqualToConstant:100],
 				[[self globalSettingsButton].heightAnchor constraintEqualToConstant:30],
